@@ -38,36 +38,26 @@ class Rating {
     return Math.max(result, 0);
   }
   
-  get voyageProfitFactor () {
+  get voyageProfitFactor() {
     let result = 2;
     if (this.voyage.zone === 'china') {
-      result += 1;
+        result += 1;
     }
     if (this.voyage.zone === 'east-indies') {
-      result += 1;
-    }
-    if (this.voyage.zone === 'china' && this.hasChina) {
-      result += 3;
-      if (this.history.length > 10) {
         result += 1;
-      }
-      if (this.voyage.length > 12) {
-        result += 1;
-      }
-      if (this.voyage.length > 18) {
-        result -= 1;
-      }
     }
-    else {
-      if (this.history.length > 8) {
-        result += 1;
-      }
-      if (this.voyage.length > 14) {
-        result -= 1;
-      }
-    }
+    result += this.historyLengthFactor;
+    result += this.voyageLengthFactor;
     return result;
   }
+
+  get voyageLengthFactor() {
+      return (this.voyage.length > 14) ? -1 : 0;
+  }
+
+  get historyLengthFactor() {
+      return (this.history.length > 8) ? 1 : 0;
+}
   
   get rating () {
     const vpf = this.voyageProfitFactor;
@@ -89,7 +79,10 @@ module.exports = {
 };
 
 class ExperiencedChinaRating extends Rating{
-
+  get captainHistoryRisk() {
+      const result = super.captainHistoryRisk - 2;
+      return Math.max(result, 0);
+  }
 }
 
 function createRating(voyage, history) {
