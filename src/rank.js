@@ -93,3 +93,6 @@ module.exports = {
   rating
 };
 
+class ExperiencedChinaRating extends Rating{
+  
+}
