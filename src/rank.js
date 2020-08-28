@@ -1,8 +1,3 @@
-function rating(voyage,history){
-  return new Rating(voyage,history).rating;
-}
-
-
 class Rating {
   constructor(voyage,history){
     this.voyage = voyage;
@@ -94,5 +89,17 @@ module.exports = {
 };
 
 class ExperiencedChinaRating extends Rating{
-  
+
+}
+
+function createRating(voyage, history) {
+  if (voyage.zone === 'china' && history.some(v => "china" === v.zone)) {
+      return new ExperiencedChinaRating(voyage, history);
+  } else {
+      return new Rating(voyage, history);
+  }
+}
+
+function rating(voyage,history){
+  return createRating(voyage,history).rating;
 }
